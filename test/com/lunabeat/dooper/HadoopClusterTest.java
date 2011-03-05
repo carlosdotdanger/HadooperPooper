@@ -58,7 +58,7 @@ public class HadoopClusterTest {
 	 */@Test
 	public void testCreateSecurityGroups(){
 		out.println("createSecurityGroups");
-		cluster.createSecurityGroups(true);
+		cluster.createSecurityGroups();
 		assertTrue(cluster.groupsExist());
 		
 	}

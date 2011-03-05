@@ -39,7 +39,6 @@ import org.apache.commons.codec.binary.Base64;
  * @author cory
  */
 public class HadoopCluster {
-	private static final int[] webPorts = {50030,50060,50070,50075};
 	private static final long DEFAULT_HOLD_TIME = 30000L; //30 seconds
 	public static final String MASTER_SUFFIX = "-master";
 	public static final String GROUP_NAME_KEY = "group-name";
@@ -79,16 +78,10 @@ public class HadoopCluster {
 
 	}
 
-	private void update() {
-		update(false);
-	}
 
-	private void update(boolean force) {
+	private void update() {
 		//unless force == true check the holdtime and bail if it's too soon.
 		Date now = new Date();
-		if (!force && (now.getTime() - lastUpdate < holdTime)) {
-			return;
-		}
 		init();
 		//get master + slave info
 		_slaves.clear();
@@ -125,14 +118,14 @@ public class HadoopCluster {
 	}
 
 	public RunInstancesResult launchMaster(String size) throws IOException {
-		update(true);
+		update();
 		if((_master != null) &&( (InstanceStateName.Running == InstanceStateName.fromValue(_master.getInstance().getState().getName()) ) || (InstanceStateName.Pending == InstanceStateName.fromValue(_master.getInstance().getState().getName()) ) )){
 			Reservation masterReservation =
 			_ec2.describeInstances(new DescribeInstancesRequest().withInstanceIds(_master.getInstance().getInstanceId())).getReservations().get(0); 
 			return new RunInstancesResult().withReservation(masterReservation);
 		}
 		//make the groups
-		createSecurityGroups(true);
+		createSecurityGroups();
 		String AMIImage = (_config.get("AMI."+size+".Image") == null)?
 			_config.get(ClusterConfig.DEFAULT_AMI_KEY)
 			:_config.get("AMI."+size+".Image");
@@ -149,13 +142,17 @@ public class HadoopCluster {
 	}
 
 	public RunInstancesResult launchSlaves(int howMany, String size) throws IOException {
-		update(true);
-		if(_master == null)
+		update();
+		if(_master == null ||
+			(InstanceStateName.Terminated ==
+				InstanceStateName.fromValue(_master.getInstance().getState().getName()))||
+			(InstanceStateName.ShuttingDown ==
+				InstanceStateName.fromValue(_master.getInstance().getState().getName())))
 			return null;
 		//wait for master to get internal ip field to pass in userinfo
+		boolean success = false;
 		if(InstanceStateName.Pending == InstanceStateName.fromValue(_master.getInstance().getState().getName())){
 			int attempts = 0;
-			boolean success = false;
 			while(attempts < WAIT_FOR_MASTER_MAX_TIMES && !success){
 				update();
 				String pDns = _master.getInstance().getPrivateDnsName();
@@ -171,6 +168,12 @@ public class HadoopCluster {
 				}
 			}
 		}
+		if(!success){
+			System.out.println("Timed out waiting for master to start.\nDon't panic.\nTry: 'pooper launch-slaves " +
+								_groupName + " " + size + " " + howMany + "' after master is running.");
+			System.exit(0);
+		}
+
 		String AMIImage = (_config.get("AMI."+size+".Image") == null)?
 			_config.get(ClusterConfig.DEFAULT_AMI_KEY)
 			:_config.get("AMI."+size+".Image");
@@ -262,9 +265,22 @@ public class HadoopCluster {
 		return false;
 	}
 
-	public void createSecurityGroups(boolean openWebPorts){
+	public void createSecurityGroups(){
 		if(groupsExist())
 			return;
+		String portList = _config.get(ClusterConfig.WEB_PORTS_KEY);
+		boolean hasWebPorts = false;
+		List<Integer> webPorts = new ArrayList<Integer>();
+		if (!"0".contentEquals(portList)){
+			String[] portParts = portList.split(",");
+			for(String portString:portParts){
+				try{
+					webPorts.add(Integer.parseInt(portString));
+				}catch(NumberFormatException e){
+					throw new RuntimeException(ClusterConfig.WEB_PORTS_KEY + " config value must be list of ints or '0'");
+				}
+			}
+		}
 		UserIdGroupPair  slaveUserIdGroupPair = new UserIdGroupPair().withGroupName(_groupName).withUserId(_config.get(ClusterConfig.ACCOUNT_ID_KEY));
 		UserIdGroupPair  masterUserIdGroupPair = new UserIdGroupPair().withGroupName(_masterGroupName).withUserId(_config.get(ClusterConfig.ACCOUNT_ID_KEY));
 		CreateSecurityGroupRequest masterCsr = new CreateSecurityGroupRequest().withGroupName(_masterGroupName).
@@ -281,10 +297,10 @@ public class HadoopCluster {
 		ipPerms.add(new IpPermission().withUserIdGroupPairs(slaveUserIdGroupPair).withIpProtocol(TCP).withToPort(HI_PORT).withFromPort(LOW_PORT));
 		ipPerms.add(new IpPermission().withUserIdGroupPairs(slaveUserIdGroupPair).withIpProtocol(UDP).withToPort(HI_PORT).withFromPort(LOW_PORT));
 		ipPerms.add(new IpPermission().withUserIdGroupPairs(slaveUserIdGroupPair).withIpProtocol(ICMP).withToPort(-1).withFromPort(-1));
-		if(openWebPorts){
+		if(hasWebPorts)
 			for(int port:webPorts)
 				ipPerms.add(new IpPermission().withToPort(port).withFromPort(port).withIpProtocol(TCP).withIpRanges(ALL_IPS));
-		}
+
 		
 		AuthorizeSecurityGroupIngressRequest masterASR = new AuthorizeSecurityGroupIngressRequest().withGroupName(_masterGroupName)
 				.withIpPermissions(ipPerms);

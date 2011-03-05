@@ -32,6 +32,7 @@ public class ClusterConfig implements AWSCredentials {
 	public static final String KEYPAIR_NAME_KEY = "EC2.KeypairName";
 	public static final String KEYPAIR_FILE_KEY = "EC2.KeypairFile";
 	public static final String MASTER_HOST_KEY = "Master.Host";
+	public static final String WEB_PORTS_KEY = "EC2.WebPorts";
 	public static final List<String> INSTANCE_TYPES = initTypes();
 
 	private static List<String> initTypes(){
@@ -79,7 +80,7 @@ public class ClusterConfig implements AWSCredentials {
 			String type = _requiredFields.getProperty(key);
 			String confValue = _properties.getProperty(key);
 			if (confValue == null) {
-				errs.add(key + " missing " + type + " value.");
+				errs.add(key + " missing (" + type + ")");
 			}
 		}
 		if (errs.size() > 0) {

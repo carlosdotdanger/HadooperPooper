@@ -217,7 +217,9 @@ public class AppCommand {
 			}
 			System.out.println("reservation id: "+ r.getReservationId());
 			System.out.println("\tinstance: " + i.getInstanceId()+"\t"+i.getState().getName());
+			
 			System.out.println("launching slaves (" + nodes + ")." );
+			System.out.println("waiting for master to get address." );
 			RunInstancesResult sr = cluster.launchSlaves(nodes,instanceSize);
 			if(sr == null){
 				System.out.println("Launch slaves failed!");
@@ -278,7 +280,6 @@ public class AppCommand {
 		HadoopCluster cluster = new HadoopCluster(clusterName,_config);
 		try{
 			System.out.println("launching slaves (" + nodes + ")." );
-			System.out.println("waiting for master to get address." );
 			RunInstancesResult sr = cluster.launchSlaves(nodes,instanceSize);
 			if(sr == null){
 				System.out.println("Launch slaves failed!");
