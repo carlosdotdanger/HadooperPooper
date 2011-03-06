@@ -16,15 +16,19 @@ import com.lunabeat.dooper.HadoopCluster;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
  * @author cory
  */
 public class AppCommand {
+	private static final Log LOG = LogFactory.getLog(AppCommand.class.getName());
 	private static final Map<String, CommandInfo> COMMANDS = initCommands();
 	private ClusterConfig _config;
 
@@ -146,28 +150,38 @@ public class AppCommand {
 
 	private void listClusters() {
 		Map<String,Map<String,List<Instance>>> out = ClusterList.getClusterMap(_config);
-		System.out.println("found clusters:");
+		System.out.println("found running clusters:");
+		HashSet<String> emptyClusters = new HashSet<String>();
 		for(String clustername:out.keySet()){
-			System.out.println(clustername);
+			//System.out.println(clustername);
+			boolean empty = true;
 			for(String group: out.get(clustername).keySet()){
 				if(out.get(clustername).get(group).size() < 1)
-					System.out.println("\t"+group+" (empty)");
-				else
-					System.out.println("\t"+group);
+					emptyClusters.add(group.replace(HadoopCluster.MASTER_SUFFIX, ""));
+				else{
+					System.out.println(group+" ("+out.get(clustername).get(group).size()+")");
+					empty = false;
+				}
 				for(Instance i: out.get(clustername).get(group)){
 					StringBuilder sb = new StringBuilder("\t");
 					sb.append(i.getInstanceId());
 					sb.append("\t");
-					sb.append(i.getPublicDnsName());
-					sb.append("\t");
-					sb.append(i.getState().getName());
-					sb.append("\t");
 					sb.append(i.getInstanceType());
 					sb.append("\t");
-					sb.append(i.getLaunchTime().toString());
+					sb.append(i.getState().getName());
+					//sb.append("\t");
+					//sb.append(i.getPublicDnsName());
 					System.out.println(sb.toString());
 				}
+				if(!empty)
+					System.out.println();
 			}
+			if(!empty)
+				System.out.println("-----------");
+		}
+		System.out.println("Found empty cluster security groups:");
+		for(String s:emptyClusters){
+			System.out.println("\t"+s);
 		}
 	}
 

@@ -9,7 +9,7 @@ import com.lunabeat.dooper.ClusterConfig;
 import com.lunabeat.dooper.ClusterConfig.ConfigException;
 import com.lunabeat.pooper.commands.AppCommand;
 import java.io.IOException;
-import java.util.ArrayList;
+import org.apache.log4j.PropertyConfigurator;
 
 /**
  *
@@ -25,6 +25,9 @@ public class Main {
 				System.out.println("\t"+ c);
 			}
 			System.exit(1);
+		}
+		if(System.getProperty("logging.config") != null){
+				PropertyConfigurator.configure(System.getProperty("logging.config"));
 		}
 
 		String configPath = System.getProperty("pooper.config",DEFAULT_CONFIG_PATH);
