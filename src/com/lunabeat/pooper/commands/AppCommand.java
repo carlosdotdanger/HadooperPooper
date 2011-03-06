@@ -335,7 +335,7 @@ public class AppCommand {
 		for (InstanceStateChange i : tr.getTerminatingInstances()) {
 			System.out.println("\t" + i.getInstanceId() + " "
 					+ i.getPreviousState().getName()
-					+ "-> " + i.getCurrentState().getName());
+					+ " -> " + i.getCurrentState().getName());
 		}
 		System.out.println("Success.");
 	}
