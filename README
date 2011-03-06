@@ -1,0 +1,26 @@
+Reimplementing some of the hadoop-ec2 tools without so much shell script as a way to get cozy with the AWS SDK.
+
+Building - 
+it's currently setup as a netbeans project depends on:
+--aws-sdk
+--commons-codec v. 1.4 (aws includes 1.3 but I had issues using it)
+--log4j
+
+setup the required libs, build.
+
+Configuring --
+there's sample config files in dist/config
+
+Running -- 
+
+run pooper.sh in dist/bin
+
+as-is HaddooperPooper can launch,terminate,list and describe clusters like the hadoop-ec2 tools, once I choose an ssh library will be adding file pushes, logins and port forwarding.
+
+
+
+
+
+
+
+
