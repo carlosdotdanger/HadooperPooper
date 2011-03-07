@@ -1,21 +1,32 @@
 Reimplementing some of the hadoop-ec2 tools without so much shell script as a way to get cozy with the AWS SDK.
 
 Building - 
-it's currently setup as a netbeans project depends on:
---aws-sdk
---commons-codec v. 1.4 (aws includes 1.3 but I had issues using it)
---log4j
+it's currently setup as a Netbeans project, will be getting the Netbeans stuff out soon.
 
-setup the required libs, build.
+depends on:
+--aws-sdk 
+http://aws.amazon.com/sdkforjava/
+
+--commons-codec v. 1.4 (aws includes 1.3 but I had issues using it)
+http://commons.apache.org/codec/
+
+--log4j
+http://logging.apache.org/log4j/
+
+--ganymed (ssh lib)
+http://www.ganymed.ethz.ch/ssh2/
+
+setup the required libraries and build.
 
 Configuring --
 there's sample config files in dist/config
+to launch a cluster you need to choose or build an AMI, preferably with hadoop installed, but you could install hadoop on startup without too much effort.
 
 Running -- 
 
-run pooper.sh in dist/bin
+run pooper.sh in dist/bin after building.
 
-as-is HaddooperPooper can launch,terminate,list and describe clusters like the hadoop-ec2 tools, once I choose an ssh library will be adding file pushes, logins and port forwarding.
+As of this writing, HaddooperPooper can launch,terminate,list,scp single files and describe clusters like the hadoop-ec2 tools, will be adding multi-file (wildcard) and directory scp copies, logins and port forwarding.
 
 
 
