@@ -1,5 +1,6 @@
 #!/bin/bash
 # resolve links - $0 may be a softlink
+
 this="${BASH_SOURCE-$0}"
 while [ -h "$this" ]; do
     ls=`ls -ld "$this"`
@@ -12,6 +13,7 @@ while [ -h "$this" ]; do
 done
 
 # convert relative path to absolute path
+WHEREIAM=`pwd`
 bin=`dirname "$this"`
 script=`basename "$this"`
 bin=`unset CDPATH; cd "$bin"; pwd`
@@ -19,7 +21,7 @@ this="$bin/$script"
 POOPER_HOME=`cd $bin/..;pwd`
 POOPER_JAR="$POOPER_HOME/HadooperPooper.jar"
 unset CDPATH
-cd $bin
+cd $WHEREIAM
 
 JAVA="java"
 

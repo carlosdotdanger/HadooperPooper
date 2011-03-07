@@ -121,8 +121,9 @@ public class HadoopClusterTest {
 		out.println(result.toString());
 		}catch(IOException e){
 			fail(e.getMessage());
+		}catch(MasterTimeoutException e){
+			fail("timed out waiting for master to get internal dns.");
 		}
-		// TODO review the generated test code and remove the default call to fail.
 	}
 
 

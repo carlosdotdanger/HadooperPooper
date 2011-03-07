@@ -19,7 +19,7 @@ public class Main {
 	private static final String DEFAULT_CONFIG_PATH = "pooper.properties";
 	public static void main(String[] args) {
 		if(args.length < 1){
-			System.out.println("USAGE: hadooperPooper <COMMAND> [command opts...]");
+			System.out.println("USAGE: pooper <COMMAND> [command opts...]");
 			System.out.println("available commands:");
 			for(String c : AppCommand.commandNames()){
 				System.out.println("\t"+ c);
@@ -41,11 +41,11 @@ public class Main {
 			}
 			appcom.runCommand(command,commandArgs);
 		}catch(IOException e){
-			System.out.println("could not open config");
+			System.out.println("could not open config file '" + configPath + "'");
 			System.exit(1);
 		}catch(ConfigException c){
 			System.out.println(c.getMessage());
-			System.exit(2);
+			System.exit(1);
 		}
 
 	}

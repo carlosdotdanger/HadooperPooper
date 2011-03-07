@@ -33,9 +33,9 @@ public class ClusterConfig implements AWSCredentials {
 	public static final String KEYPAIR_FILE_KEY = "EC2.KeypairFile";
 	public static final String MASTER_HOST_KEY = "Master.Host";
 	public static final String WEB_PORTS_KEY = "EC2.WebPorts";
-	public static final List<String> INSTANCE_TYPES = initTypes();
-
-	private static List<String> initTypes(){
+	public static final String USERNAME_KEY = "EC2.Username";
+	public static final List<String> INSTANCE_TYPES = initInstanceTypes();
+	private static List<String> initInstanceTypes(){
 		ArrayList<String> tmpList = new ArrayList<String>();
 		tmpList.add("t1.micro");
 		tmpList.add("m1.small");
@@ -50,7 +50,18 @@ public class ClusterConfig implements AWSCredentials {
 		tmpList.add("cg1.4xlarge");
 		return Collections.unmodifiableList(tmpList);
 	}
+	public static final List<String> INSTANCE_GROUP_TYPES = initInstaceGroupTypes();
+	static private List<String> initInstaceGroupTypes(){
+		ArrayList<String> tmpList = new ArrayList<String>();
+		tmpList.add("cluster");
+		tmpList.add("master");
+		tmpList.add("slaves");
+		return Collections.unmodifiableList(tmpList);
+	}
+	 
+	public static final String SCP_FILE_MODE = "0644";
 
+	
 	/**
 	 * 
 	 * @param src

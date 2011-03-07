@@ -4,6 +4,8 @@
  */
 package com.lunabeat.dooper;
 
+import ch.ethz.ssh2.Connection;
+import ch.ethz.ssh2.SCPClient;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressRequest;
@@ -25,6 +27,7 @@ import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 import com.amazonaws.services.ec2.model.UserIdGroupPair;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,13 +36,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
  * @author cory
  */
 public class HadoopCluster {
-
+	private static final Log LOGGER = LogFactory.getLog(HadoopCluster.class.getName());
 	public static final String MASTER_SUFFIX = "-master";
 	public static final String GROUP_NAME_KEY = "group-name";
 	private String _groupName = null;
@@ -57,6 +62,7 @@ public class HadoopCluster {
 	private static final Pattern userDataValue = Pattern.compile("%([a-zA-Z0-9\\._-]+)%");
 	private static final int WAIT_FOR_MASTER_MAX_TIMES = 5;
 	private static final int WAIT_FOR_MASTER_INTERVAL_SECONDS = 30;
+	private static final String BLANK = "";
 
 	/**
 	 * 
@@ -131,15 +137,17 @@ public class HadoopCluster {
 		return _ec2.runInstances(rir);
 	}
 
-	public RunInstancesResult launchSlaves(int howMany, String size) throws IOException {
+	public RunInstancesResult launchSlaves(int howMany, String size) throws IOException, MasterTimeoutException {
 		update();
-		if (_master == null
-				|| (InstanceStateName.Terminated
-				== InstanceStateName.fromValue(_master.getInstance().getState().getName()))
-				|| (InstanceStateName.ShuttingDown
-				== InstanceStateName.fromValue(_master.getInstance().getState().getName()))) {
+		if (_master == null) {
 			return null;
 		}
+		InstanceStateName masterState = InstanceStateName.fromValue(_master.getInstance().getState().getName());
+		if ((InstanceStateName.Terminated == masterState)
+				|| (InstanceStateName.ShuttingDown == masterState)) {
+			return null;
+		}
+
 		//wait for master to get internal ip field to pass in userinfo
 		boolean success = false;
 		if (InstanceStateName.Pending == InstanceStateName.fromValue(_master.getInstance().getState().getName())) {
@@ -159,9 +167,7 @@ public class HadoopCluster {
 				}
 			}
 			if (!success) {
-				System.out.println("Timed out waiting for master to start.\nDon't panic.\nTry: 'pooper launch-slaves "
-						+ _groupName + " " + size + " " + howMany + "' after master is running.");
-				System.exit(0);
+				throw new MasterTimeoutException(_groupName, howMany, size, _master.getInstance().getInstanceId());
 			}
 		}
 
@@ -208,11 +214,20 @@ public class HadoopCluster {
 
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public TerminateInstancesResult terminateAllSlaves() {
 		update();
 		return terminateSlaves(_slaves.size());
 	}
 
+	/**
+	 * 
+	 * @param howMany
+	 * @return result of aws call to terminate
+	 */
 	public TerminateInstancesResult terminateSlaves(int howMany) {
 		update();
 		int terminated = 0;
@@ -235,19 +250,23 @@ public class HadoopCluster {
 	}
 
 	/**
-	 * @return the _groupName
+	 * @return the groupName
 	 */
 	public String getGroupName() {
 		return _groupName;
 	}
 
 	/**
-	 * @return the _masterGroupName
+	 * @return the masterGroupName
 	 */
 	public String getMasterGroupName() {
 		return _masterGroupName;
 	}
 
+	/**
+	 *
+	 * @return whether security groups exist for this cluster.
+	 */
 	public boolean groupsExist() {
 		update();
 		DescribeSecurityGroupsResult dsr =
@@ -258,6 +277,9 @@ public class HadoopCluster {
 		return false;
 	}
 
+	/**
+	 * 
+	 */
 	public void createSecurityGroups() {
 		if (groupsExist()) {
 			return;
@@ -306,12 +328,16 @@ public class HadoopCluster {
 
 	}
 
-	public void removeSecurityGroups() {
+	/**
+	 *
+	 * @return boolean success
+	 */
+	public boolean removeSecurityGroups() {
 		if (!groupsExist()) {
-			return;
+			return true;
 		}
 		if (_master != null || _slaves.size() > 0) {
-			return;
+			return false;
 		}
 		UserIdGroupPair slaveUserIdGroupPair = new UserIdGroupPair().withGroupName(_groupName).withUserId(_config.get(ClusterConfig.ACCOUNT_ID_KEY));
 		UserIdGroupPair masterUserIdGroupPair = new UserIdGroupPair().withGroupName(_masterGroupName).withUserId(_config.get(ClusterConfig.ACCOUNT_ID_KEY));
@@ -329,9 +355,80 @@ public class HadoopCluster {
 		_ec2.revokeSecurityGroupIngress(mrsgi);
 		_ec2.deleteSecurityGroup(new DeleteSecurityGroupRequest().withGroupName(_groupName));
 		_ec2.deleteSecurityGroup(new DeleteSecurityGroupRequest().withGroupName(_masterGroupName));
-
+		return true;
 	}
 
+	/**
+	 * 
+	 * @param hosts
+	 * @param src
+	 * @param dest
+	 */
+	public void putFile(List<ClusterInstance> hosts, String src, String dest) throws SCPException {
+		for (ClusterInstance host : hosts) {
+			putFile(host, src, dest);
+		}
+	}
+
+	/**
+	 *
+	 * @param host
+	 * @param src
+	 * @param dest
+	 * @throws SCPException
+	 */
+	public void putFile(ClusterInstance host, String src, String dest) throws SCPException {
+		try {
+
+			Connection conn = new Connection(host.getInstance().getPublicDnsName());
+			conn.connect();
+			File keyfile = new File(_config.get(ClusterConfig.KEYPAIR_FILE_KEY));
+			boolean isAuthenticated =
+					conn.authenticateWithPublicKey(_config.get(ClusterConfig.USERNAME_KEY), keyfile, BLANK);
+			if (isAuthenticated == false) {
+				throw new SCPException("Authentication failed.", host);
+			}
+			SCPClient scp = new SCPClient(conn);
+			String[] pathAndFile = splitPathAndFile(dest);
+			String outFileName = pathAndFile[1].length() > 0 ? pathAndFile[1] : splitPathAndFile(src)[1];
+			LOGGER.info("SCP '" + src + "' '" + outFileName + "' '" + pathAndFile[0] + "' " + ClusterConfig.SCP_FILE_MODE);
+			scp.put(src, outFileName, pathAndFile[0], ClusterConfig.SCP_FILE_MODE);
+		} catch (IOException e) {
+			throw new SCPException(e.getMessage(), e.getCause(), host);
+		}
+	}
+
+	/**
+	 *
+	 * @param path
+	 * @return String[2] with path in 0 and filename in 1
+	 */
+	private String[] splitPathAndFile(String path) {
+		String[] pathAndFile = {"", ""};
+		if (path == null || path.length() < 1) {
+			return pathAndFile;
+		}
+		if(path.endsWith("/")){
+			pathAndFile[0] = path;
+			return pathAndFile;
+		}
+		String[] parts = path.split("/");
+		if (parts.length > 0) {
+			pathAndFile[1] = parts[parts.length - 1];
+			StringBuilder sb = new StringBuilder("");
+			for (int x = 0; x < parts.length - 1; x++) {
+				sb.append(parts[x]).append("/");
+			}
+			pathAndFile[0] = sb.toString();
+		}
+		return pathAndFile;
+	}
+
+	/**
+	 * 
+	 * @return userdata file contents after placeholder substitution placeholder
+	 * @throws IOException
+	 */
 	public String getUserData() throws IOException {
 		update();
 		StringBuilder userData = new StringBuilder();
