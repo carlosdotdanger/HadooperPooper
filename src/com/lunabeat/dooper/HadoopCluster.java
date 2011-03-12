@@ -44,6 +44,7 @@ import org.apache.commons.logging.LogFactory;
  * @author cory
  */
 public class HadoopCluster {
+
 	private static final Log LOGGER = LogFactory.getLog(HadoopCluster.class.getName());
 	public static final String MASTER_SUFFIX = "-master";
 	public static final String GROUP_NAME_KEY = "group-name";
@@ -117,7 +118,10 @@ public class HadoopCluster {
 
 	public RunInstancesResult launchMaster(String size) throws IOException {
 		update();
-		if ((_master != null) && ((InstanceStateName.Running == InstanceStateName.fromValue(_master.getInstance().getState().getName())) || (InstanceStateName.Pending == InstanceStateName.fromValue(_master.getInstance().getState().getName())))) {
+		if ((_master != null) && ((InstanceStateName.Running
+				== InstanceStateName.fromValue(_master.getInstance().getState().getName()))
+				|| (InstanceStateName.Pending
+				== InstanceStateName.fromValue(_master.getInstance().getState().getName())))) {
 			Reservation masterReservation =
 					_ec2.describeInstances(new DescribeInstancesRequest().withInstanceIds(_master.getInstance().getInstanceId())).getReservations().get(0);
 			return new RunInstancesResult().withReservation(masterReservation);
@@ -150,7 +154,8 @@ public class HadoopCluster {
 
 		//wait for master to get internal ip field to pass in userinfo
 		boolean success = false;
-		if (InstanceStateName.Pending == InstanceStateName.fromValue(_master.getInstance().getState().getName())) {
+		if (InstanceStateName.Pending
+				== InstanceStateName.fromValue(_master.getInstance().getState().getName())) {
 			int attempts = 0;
 			while ((attempts < WAIT_FOR_MASTER_MAX_TIMES) && !success) {
 				update();
@@ -167,7 +172,11 @@ public class HadoopCluster {
 				}
 			}
 			if (!success) {
-				throw new MasterTimeoutException(_groupName, howMany, size, _master.getInstance().getInstanceId());
+				throw new MasterTimeoutException(
+						_groupName,
+						howMany,
+						size,
+						_master.getInstance().getInstanceId());
 			}
 		}
 
@@ -235,7 +244,8 @@ public class HadoopCluster {
 		for (ClusterInstance slave : _slaves) {
 			InstanceStateName state =
 					InstanceStateName.fromValue(slave.getInstance().getState().getName());
-			if (terminated < howMany && (state == InstanceStateName.Running || state == InstanceStateName.Pending)) {
+			if (terminated < howMany && (state == InstanceStateName.Running
+					|| state == InstanceStateName.Pending)) {
 				iids.add(slave.getInstance().getInstanceId());
 				terminated++;
 			}
@@ -285,7 +295,7 @@ public class HadoopCluster {
 			return;
 		}
 		String portList = _config.get(ClusterConfig.WEB_PORTS_KEY);
-		boolean hasWebPorts = false;
+
 		List<Integer> webPorts = new ArrayList<Integer>();
 		if (!"0".contentEquals(portList)) {
 			String[] portParts = portList.split(",");
@@ -293,7 +303,8 @@ public class HadoopCluster {
 				try {
 					webPorts.add(Integer.parseInt(portString));
 				} catch (NumberFormatException e) {
-					throw new RuntimeException(ClusterConfig.WEB_PORTS_KEY + " config value must be list of ints or '0'");
+					throw new RuntimeException(ClusterConfig.WEB_PORTS_KEY
+							+ " config value must be list of ints or '0'");
 				}
 			}
 		}
@@ -313,11 +324,12 @@ public class HadoopCluster {
 		ipPerms.add(new IpPermission().withUserIdGroupPairs(slaveUserIdGroupPair).withIpProtocol(TCP).withToPort(HI_PORT).withFromPort(LOW_PORT));
 		ipPerms.add(new IpPermission().withUserIdGroupPairs(slaveUserIdGroupPair).withIpProtocol(UDP).withToPort(HI_PORT).withFromPort(LOW_PORT));
 		ipPerms.add(new IpPermission().withUserIdGroupPairs(slaveUserIdGroupPair).withIpProtocol(ICMP).withToPort(-1).withFromPort(-1));
-		if (hasWebPorts) {
-			for (int port : webPorts) {
-				ipPerms.add(new IpPermission().withToPort(port).withFromPort(port).withIpProtocol(TCP).withIpRanges(ALL_IPS));
-			}
+
+		for (int port : webPorts) {
+			LOGGER.info("Adding port " + port + " to security group.");
+			ipPerms.add(new IpPermission().withToPort(port).withFromPort(port).withIpProtocol(TCP).withIpRanges(ALL_IPS));
 		}
+
 
 
 		AuthorizeSecurityGroupIngressRequest masterASR = new AuthorizeSecurityGroupIngressRequest().withGroupName(_masterGroupName).withIpPermissions(ipPerms);
@@ -408,7 +420,7 @@ public class HadoopCluster {
 		if (path == null || path.length() < 1) {
 			return pathAndFile;
 		}
-		if(path.endsWith("/")){
+		if (path.endsWith("/")) {
 			pathAndFile[0] = path;
 			return pathAndFile;
 		}

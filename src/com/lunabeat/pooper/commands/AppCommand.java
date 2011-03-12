@@ -49,7 +49,9 @@ public class AppCommand {
 		tmpMap.put("terminate-cluster", new CommandInfo(5, new String[]{"name:string"}, "Terminate all instances in a  Hadoop cluster."));
 		tmpMap.put("terminate-slaves", new CommandInfo(6, new String[]{"name:string", "nodes:int"}, "Terminate slaves in a cluster."));
 		tmpMap.put("describe-cluster", new CommandInfo(7, new String[]{"name:string"}, "Get instance info for a cluster."));
-		tmpMap.put("push-file", new CommandInfo(8, new String[]{"clusterName:string","instances:instances","srcPath:string","destPath:string"}, "Copy file to cluster machines."));
+		tmpMap.put("push-file", new CommandInfo(8, new String[]{"clusterName:string", "instances:instances", "srcPath:string", "destPath:string"}, "Copy file to cluster machines."));
+		tmpMap.put("create-groups", new CommandInfo(9, new String[]{"clusterName:string"}, "Copy file to cluster machines."));
+
 		return Collections.unmodifiableMap(tmpMap);
 	}
 
@@ -103,6 +105,9 @@ public class AppCommand {
 			case 8:
 				pushFile(args);
 				break;
+			case 9:
+				createGroups(args[0]);
+				break;
 			default:
 				throw new RuntimeException("Bad AppInfo index for '" + commandName + "' :" + cInfo.getIndex());
 		}
@@ -147,17 +152,16 @@ public class AppCommand {
 				}
 			} else if ("instanceSize".contentEquals(type)) {
 				if (!ClusterConfig.INSTANCE_TYPES.contains(args[x])) {
-					StringBuilder sb = new StringBuilder("Invalid instance size '").
-					append(args[x]).append("'.\n").append("\tvalid sizes are:\n");
+					StringBuilder sb = new StringBuilder("Invalid instance size '").append(args[x]).append("'.\n").append("\tvalid sizes are:\n");
 					for (String s : ClusterConfig.INSTANCE_TYPES) {
 						sb.append("\t\t").append(s).append("\n");
 					}
 					throw new ArgumentException("Command '" + commandName + "'\n" + sb.toString());
 				}
-			}else if ("instances".contentEquals(type)){
+			} else if ("instances".contentEquals(type)) {
 
-				if(!ClusterConfig.INSTANCE_GROUP_TYPES.contains(args[x])){
-					StringBuilder sb = 
+				if (!ClusterConfig.INSTANCE_GROUP_TYPES.contains(args[x])) {
+					StringBuilder sb =
 							new StringBuilder("Invalid instance '").append(args[x]).
 							append("'.\n").append("\tvalid instances are:\n");
 					for (String s : ClusterConfig.INSTANCE_GROUP_TYPES) {
@@ -217,13 +221,13 @@ public class AppCommand {
 			return;
 		}
 
-		if(cluster.removeSecurityGroups())
+		if (cluster.removeSecurityGroups()) {
 			System.out.println("Deleted cluster '" + clusterName + "'.");
-		else
+		} else {
 			System.out.println("'" + clusterName + "' has instances and was not deleted.");
+		}
 
 	}
-
 
 	private void launchCluster(String[] args) {
 		String clusterName = args[0];
@@ -268,10 +272,10 @@ public class AppCommand {
 			System.out.println("IOException during userdata file encoding.");
 			System.out.println(e.getMessage());
 			System.exit(100);
-		}catch(MasterTimeoutException e){
-				System.out.println("Timed out waiting for master to start.\nDon't panic.\nTry: 'pooper launch-slaves "
-						+ e.group() + " " + e.size() + " " + e.howMany() + "' after master is running.\n"+"master id: " + e.masterId());
-				System.exit(0);
+		} catch (MasterTimeoutException e) {
+			System.out.println("Timed out waiting for master to start.\nDon't panic.\nTry: 'pooper launch-slaves "
+					+ e.group() + " " + e.size() + " " + e.howMany() + "' after master is running.\n" + "master id: " + e.masterId());
+			System.exit(0);
 		}
 	}
 
@@ -329,10 +333,10 @@ public class AppCommand {
 			System.out.println("IOException during userdata file encoding.");
 			System.out.println(e.getMessage());
 			System.exit(100);
-		}catch(MasterTimeoutException e){
-				System.out.println("Timed out waiting for master to start.\nDon't panic.\nTry: 'pooper launch-slaves "
-						+ e.group() + " " + e.size() + " " + e.howMany() + "' after master is running.\n"+"master id: " + e.masterId());
-				System.exit(0);
+		} catch (MasterTimeoutException e) {
+			System.out.println("Timed out waiting for master to start.\nDon't panic.\nTry: 'pooper launch-slaves "
+					+ e.group() + " " + e.size() + " " + e.howMany() + "' after master is running.\n" + "master id: " + e.masterId());
+			System.exit(0);
 		}
 	}
 
@@ -423,34 +427,36 @@ public class AppCommand {
 		String target = args[1];
 		String src = args[2];
 		String dest = args[3];
-		HadoopCluster cluster  = new HadoopCluster(clusterName,_config);
-		try{
-		if("master".contentEquals(target) || "cluster".contentEquals(target)){
-			System.out.println("Pushing to master.");
-			if(cluster.getMaster() == null)
-				System.out.println("No master found.");
-			cluster.putFile(cluster.getMaster(), src, dest);
-			System.out.println("Copied to " + cluster.getMaster().getInstance().getInstanceId() + ".");
-		}
-		if("slaves".contentEquals(target) || "cluster".contentEquals(target)){
-			System.out.println("Pushing to slaves.");
-			List<ClusterInstance> slaves = cluster.getSlaves();
-			if(slaves == null)
-				System.out.println("No slaves found.");
-			System.out.println("Copying to " + slaves.size() + " slaves.");
-			for(ClusterInstance slave:slaves){
-				cluster.putFile(slave, src, dest);
-				System.out.println("Copied to " + slave.getInstance().getInstanceId() + ".");
+		HadoopCluster cluster = new HadoopCluster(clusterName, _config);
+		try {
+			if ("master".contentEquals(target) || "cluster".contentEquals(target)) {
+				System.out.println("Pushing to master.");
+				if (cluster.getMaster() == null) {
+					System.out.println("No master found.");
+				}
+				cluster.putFile(cluster.getMaster(), src, dest);
+				System.out.println("Copied to " + cluster.getMaster().getInstance().getInstanceId() + ".");
 			}
-		}
+			if ("slaves".contentEquals(target) || "cluster".contentEquals(target)) {
+				System.out.println("Pushing to slaves.");
+				List<ClusterInstance> slaves = cluster.getSlaves();
+				if (slaves == null) {
+					System.out.println("No slaves found.");
+				}
+				System.out.println("Copying to " + slaves.size() + " slaves.");
+				for (ClusterInstance slave : slaves) {
+					cluster.putFile(slave, src, dest);
+					System.out.println("Copied to " + slave.getInstance().getInstanceId() + ".");
+				}
+			}
 
-		System.out.println("Copied " + src + " to " + dest + " on " + target + ".");
-		}catch(SCPException scpe){
+			System.out.println("Copied " + src + " to " + dest + " on " + target + ".");
+		} catch (SCPException scpe) {
 			boolean isMaster = scpe.getInstance().getInstance().getInstanceId().contentEquals(cluster.getMaster().getInstance().getInstanceId());
-			System.out.println("Error pushing to " + (isMaster? "master" : "slave"));
+			System.out.println("Error pushing to " + (isMaster ? "master" : "slave"));
 			System.out.println("InstanceId: " + scpe.getInstance().getInstance().getInstanceId());
 			System.out.println("message: " + scpe.getMessage());
-			if(scpe.getCause() != null){
+			if (scpe.getCause() != null) {
 				System.out.println("cause: " + scpe.getCause().getMessage());
 			}
 			System.exit(1);
@@ -458,6 +464,11 @@ public class AppCommand {
 
 	}
 
+	private void createGroups(String clusterName) {
+		HadoopCluster cluster = new HadoopCluster(clusterName, _config);
+		cluster.createSecurityGroups();
+		System.out.println("Created groups for " + clusterName + ".");
+	}
 
 	public static class CommandInfo {
 
