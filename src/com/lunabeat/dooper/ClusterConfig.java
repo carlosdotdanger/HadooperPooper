@@ -34,6 +34,7 @@ public class ClusterConfig implements AWSCredentials {
 	public static final String MASTER_HOST_KEY = "Master.Host";
 	public static final String WEB_PORTS_KEY = "EC2.WebPorts";
 	public static final String USERNAME_KEY = "EC2.Username";
+	public static final String EC2_INSTANCE_PREFIX = "i-";
 	public static final List<String> INSTANCE_TYPES = initInstanceTypes();
 	private static List<String> initInstanceTypes(){
 		ArrayList<String> tmpList = new ArrayList<String>();

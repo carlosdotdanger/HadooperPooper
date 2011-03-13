@@ -4,6 +4,7 @@
  */
 package com.lunabeat.pooper.commands;
 
+import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.InstanceStateChange;
 import com.amazonaws.services.ec2.model.Reservation;
@@ -50,7 +51,9 @@ public class AppCommand {
 		tmpMap.put("terminate-slaves", new CommandInfo(6, new String[]{"name:string", "nodes:int"}, "Terminate slaves in a cluster."));
 		tmpMap.put("describe-cluster", new CommandInfo(7, new String[]{"name:string"}, "Get instance info for a cluster."));
 		tmpMap.put("push-file", new CommandInfo(8, new String[]{"clusterName:string", "instances:instances", "srcPath:string", "destPath:string"}, "Copy file to cluster machines."));
-		tmpMap.put("create-groups", new CommandInfo(9, new String[]{"clusterName:string"}, "Copy file to cluster machines."));
+		tmpMap.put("create-groups", new CommandInfo(9, new String[]{"clusterName:string"}, "Create security groups for cluster"));
+		tmpMap.put("get-login-command", new CommandInfo(10, new String[]{"target:string"}, "Get remote login command for master or specified instance id. This command is for external scripts."));
+		tmpMap.put("login", new CommandInfo(11, new String[]{"target:string"}, "Launch remote login for master or specific instance."));
 
 		return Collections.unmodifiableMap(tmpMap);
 	}
@@ -107,6 +110,13 @@ public class AppCommand {
 				break;
 			case 9:
 				createGroups(args[0]);
+				break;
+			case 10:
+				getLoginCommand(args[0]);
+				break;
+			case 11:
+				LOG.fatal("Direct call to login.");
+				System.out.println("COMMAND 'login' needs to be handled by external script for now.\nUse 'get-login-command' to retrieve command and exec in shell.");
 				break;
 			default:
 				throw new RuntimeException("Bad AppInfo index for '" + commandName + "' :" + cInfo.getIndex());
@@ -468,6 +478,31 @@ public class AppCommand {
 		HadoopCluster cluster = new HadoopCluster(clusterName, _config);
 		cluster.createSecurityGroups();
 		System.out.println("Created groups for " + clusterName + ".");
+	}
+
+	private void getLoginCommand(String target) {
+		String host = null;
+		HadoopCluster cluster = new HadoopCluster(target, _config);
+		if(cluster.groupsExist())
+			if(cluster.getMaster() != null)
+				host = cluster.getMaster().getInstance().getPublicDnsName();
+		else if(target.startsWith(ClusterConfig.EC2_INSTANCE_PREFIX)){
+			DescribeInstancesResult ir = cluster.getInstanceForId(target);
+			if(ir.getReservations().size() > 0)
+				if(ir.getReservations().get(0).getInstances().size() > 0)
+					host = ir.getReservations().get(0).getInstances().get(0).getPublicDnsName();
+		}
+		if(host == null){
+			System.out.println("'" + target + "' is not a valid cluster name or instance id.\nexiting.");
+			System.exit(0);
+		}
+		StringBuilder sb = new StringBuilder("ssh -i")
+				.append(_config.get(ClusterConfig.KEYPAIR_FILE_KEY))
+				.append(" ")
+				.append(_config.get(ClusterConfig.USERNAME_KEY))
+				.append("@")
+				.append(host);
+		System.out.println(sb.toString());
 	}
 
 	public static class CommandInfo {

@@ -477,4 +477,12 @@ public class HadoopCluster {
 		}
 		return userData.toString();
 	}
+
+	/**
+	 * convenience method for getting instance info.
+	 * @return
+	 */
+	public DescribeInstancesResult getInstanceForId(String instanceId) {
+		return _ec2.describeInstances(new DescribeInstancesRequest().withInstanceIds(instanceId));
+	}
 }

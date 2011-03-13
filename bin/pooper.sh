@@ -46,10 +46,17 @@ for jar in $POOPER_LIB/*.jar ; do
    CLASSPATH=$CLASSPATH:$jar
 done
 
+
+
 JAVA_OPTS="-Dlogging.config=$POOPER_HOME/config/log4j.properties"
 JAVA_OPTS="$JAVA_OPTS -Dclasspath=$CLASSPATH"
 JAVA_OPTS="$JAVA_OPTS -Dpooper.config=$POOPER_CONFIG"
 
-COMMAND="$JAVA  $JAVA_OPTS -jar $POOPER_JAR $1 $2 $3 $4 $5 $6"
+
+if [ "$1" == "login" ] ; then
+	COMMAND=`$JAVA  $JAVA_OPTS -jar $POOPER_JAR get-login-command $2 | tail -n1`
+else
+	COMMAND="$JAVA  $JAVA_OPTS -jar $POOPER_JAR $1 $2 $3 $4 $5 $6"
+fi
 
 exec $COMMAND
