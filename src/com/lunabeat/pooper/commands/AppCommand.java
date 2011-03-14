@@ -483,14 +483,17 @@ public class AppCommand {
 	private void getLoginCommand(String target) {
 		String host = null;
 		HadoopCluster cluster = new HadoopCluster(target, _config);
-		if(cluster.groupsExist())
+		if(cluster.groupsExist()){
 			if(cluster.getMaster() != null)
 				host = cluster.getMaster().getInstance().getPublicDnsName();
-		else if(target.startsWith(ClusterConfig.EC2_INSTANCE_PREFIX)){
+		}else if(target.startsWith(ClusterConfig.EC2_INSTANCE_PREFIX)){
 			DescribeInstancesResult ir = cluster.getInstanceForId(target);
-			if(ir.getReservations().size() > 0)
-				if(ir.getReservations().get(0).getInstances().size() > 0)
+			LOG.info(ir.toString());
+			if(ir.getReservations().size() > 0){
+				if(ir.getReservations().get(0).getInstances().size() > 0){
 					host = ir.getReservations().get(0).getInstances().get(0).getPublicDnsName();
+				}
+			}
 		}
 		if(host == null){
 			System.out.println("'" + target + "' is not a valid cluster name or instance id.\nexiting.");

@@ -58,5 +58,7 @@ if [ "$1" == "login" ] ; then
 else
 	COMMAND="$JAVA  $JAVA_OPTS -jar $POOPER_JAR $1 $2 $3 $4 $5 $6"
 fi
-
+#echo "COMMAND:"
+#echo "$COMMAND"
+#echo "--------"
 exec $COMMAND
