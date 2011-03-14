@@ -14,7 +14,7 @@ http://commons.apache.org/codec/
 http://logging.apache.org/log4j/
 
 --ganymed (ssh lib)
-http://www.ganymed.ethz.ch/ssh2/
+http://www.cleondris.ch/opensource/ssh2/
 
 setup the required libraries and build.
 
