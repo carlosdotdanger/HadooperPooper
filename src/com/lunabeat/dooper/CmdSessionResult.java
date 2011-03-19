@@ -24,8 +24,10 @@ public class CmdSessionResult {
 	private int _code;
 	private String _stderr;
 	private String _stdout;
+	private ClusterInstance _instance;
 
-	public CmdSessionResult(int code,String stdout,String stderr){
+	public CmdSessionResult(ClusterInstance instance,int code,String stdout,String stderr){
+		_instance = instance;
 		_code = code;
 		_stdout = stdout;
 		_stderr = stderr;
@@ -47,5 +49,11 @@ public class CmdSessionResult {
 	 * @return stdout
 	 */ public String getStdout() {
 		return _stdout;
+	}
+
+	/**
+	 * @return instance info
+	 */ public ClusterInstance getInstance() {
+		return _instance;
 	}
 }

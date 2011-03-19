@@ -49,7 +49,7 @@ public class Main {
 			for(int x = 1; x < args.length;x++){
 				commandArgs[x-1] = args[x];
 			}
-			appcom.runCommand(command,commandArgs);
+			appcom.runAppCommand(command,commandArgs);
 		}catch(IOException e){
 			System.out.println("could not open config file '" + configPath + "'");
 			System.exit(1);

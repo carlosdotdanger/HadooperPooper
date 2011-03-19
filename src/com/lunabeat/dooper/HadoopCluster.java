@@ -417,6 +417,7 @@ public class HadoopCluster {
 			String fileMode = _config.get(ClusterConfig.SCP_FILE_MODE_KEY, ClusterConfig.SCP_DEFAULT_FILE_MODE);
 			LOGGER.info("SCP '" + src + "' '" + outFileName + "' '" + pathAndFile[0] + "' " + fileMode);
 			scp.put(src, outFileName, pathAndFile[0], fileMode);
+			conn.close();
 		} catch (IOException e) {
 			throw new SCPException(e.getMessage(), e.getCause(), host);
 		}
@@ -432,7 +433,7 @@ public class HadoopCluster {
 	public List<CmdSessionResult> remoteCommand(List<ClusterInstance> hosts, String command) throws CmdException{
 		ArrayList<CmdSessionResult> results = new ArrayList<CmdSessionResult>();
 		for(ClusterInstance host:hosts)
-			remoteCommand(host,command);
+			results.add(remoteCommand(host,command));
 		return results;
 	}
 
@@ -452,7 +453,10 @@ public class HadoopCluster {
 					conn.authenticateWithPublicKey(
 					_config.get(ClusterConfig.USERNAME_KEY),
 					keyfile, BLANK);
+			if(!isAuthenticated)
+				throw new CmdException("Could not authenticate.",host);
 			Session session = conn.openSession();
+			LOGGER.info("EXEC '"+command + "' on instance: " + host.getInstance().getInstanceId());
 			session.execCommand(command);
 			InputStream outStrm = new StreamGobbler(session.getStdout());
 			InputStream errStrm = new StreamGobbler(session.getStderr());
@@ -461,16 +465,18 @@ public class HadoopCluster {
 			StringBuilder sb = new StringBuilder();
 			String stdout;
 			while((stdout = stdoutRdr.readLine()) != null){
-				sb.append(stdout);
+				sb.append(stdout).append("\n");
 			}
 			stdout = sb.toString();
 			sb = new StringBuilder();
 			String stderr;
 			while((stderr = stderrRdr.readLine()) != null){
-				sb.append(stderr);
+				sb.append(stderr).append("\n");
 			}
 			stderr = sb.toString();
-			return new CmdSessionResult(session.getExitStatus(),stdout,stderr);
+			conn.close();
+			conn = null;
+			return new CmdSessionResult(host,session.getExitStatus(),stdout,stderr);
 		} catch (IOException e) {
 			throw new CmdException(e.getMessage(), e.getCause(), host);
 		}

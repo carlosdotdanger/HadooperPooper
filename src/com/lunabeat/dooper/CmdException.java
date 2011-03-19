@@ -17,7 +17,7 @@
 package com.lunabeat.dooper;
 
 
-class CmdException extends Exception {
+public class CmdException extends Exception {
 	ClusterInstance _instance;
 
 	/**
