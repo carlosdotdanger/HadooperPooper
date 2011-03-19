@@ -17,6 +17,8 @@ package com.lunabeat.dooper;
 
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.SCPClient;
+import ch.ethz.ssh2.Session;
+import ch.ethz.ssh2.StreamGobbler;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressRequest;
@@ -41,6 +43,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -139,10 +143,8 @@ public class HadoopCluster {
 		}
 		//make the groups
 		createSecurityGroups();
-		String AMIImage = (_config.get("AMI." + size + ".Image") == null)
-				? _config.get(ClusterConfig.DEFAULT_AMI_KEY)
-				: _config.get("AMI." + size + ".Image");
-		System.out.println("AMIImage = [" + AMIImage + "]");
+		String AMIImage = _config.get( "AMI." + size + ".Image", _config.get(ClusterConfig.DEFAULT_AMI_KEY) );
+		LOGGER.info("AMIImage = [" + AMIImage + "]");
 		RunInstancesRequest rir = new RunInstancesRequest().withImageId(AMIImage).
 				withMinCount(1).
 				withMaxCount(1).
@@ -192,9 +194,7 @@ public class HadoopCluster {
 		}
 
 
-		String AMIImage = (_config.get("AMI." + size + ".Image") == null)
-				? _config.get(ClusterConfig.DEFAULT_AMI_KEY)
-				: _config.get("AMI." + size + ".Image");
+		String AMIImage = _config.get( "AMI." + size + ".Image", _config.get(ClusterConfig.DEFAULT_AMI_KEY) );
 		RunInstancesRequest rir = new RunInstancesRequest().withImageId(AMIImage).
 				withMinCount(howMany).
 				withMaxCount(howMany).
@@ -419,6 +419,60 @@ public class HadoopCluster {
 			scp.put(src, outFileName, pathAndFile[0], fileMode);
 		} catch (IOException e) {
 			throw new SCPException(e.getMessage(), e.getCause(), host);
+		}
+	}
+
+/**
+ * 
+ * @param hosts
+ * @param command
+ * @return
+ * @throws CmdException
+ */
+	public List<CmdSessionResult> remoteCommand(List<ClusterInstance> hosts, String command) throws CmdException{
+		ArrayList<CmdSessionResult> results = new ArrayList<CmdSessionResult>();
+		for(ClusterInstance host:hosts)
+			remoteCommand(host,command);
+		return results;
+	}
+
+/**
+ * 
+ * @param host
+ * @param command
+ * @return
+ * @throws CmdException
+ */
+	public CmdSessionResult remoteCommand(ClusterInstance host, String command) throws CmdException{
+		try{
+			Connection conn = new Connection(host.getInstance().getPublicDnsName());
+			conn.connect();
+			File keyfile = new File(_config.get(ClusterConfig.KEYPAIR_FILE_KEY));
+			boolean isAuthenticated =
+					conn.authenticateWithPublicKey(
+					_config.get(ClusterConfig.USERNAME_KEY),
+					keyfile, BLANK);
+			Session session = conn.openSession();
+			session.execCommand(command);
+			InputStream outStrm = new StreamGobbler(session.getStdout());
+			InputStream errStrm = new StreamGobbler(session.getStderr());
+			BufferedReader stdoutRdr = new BufferedReader(new InputStreamReader(outStrm));
+			BufferedReader stderrRdr = new BufferedReader(new InputStreamReader(errStrm));
+			StringBuilder sb = new StringBuilder();
+			String stdout;
+			while((stdout = stdoutRdr.readLine()) != null){
+				sb.append(stdout);
+			}
+			stdout = sb.toString();
+			sb = new StringBuilder();
+			String stderr;
+			while((stderr = stderrRdr.readLine()) != null){
+				sb.append(stderr);
+			}
+			stderr = sb.toString();
+			return new CmdSessionResult(session.getExitStatus(),stdout,stderr);
+		} catch (IOException e) {
+			throw new CmdException(e.getMessage(), e.getCause(), host);
 		}
 	}
 

@@ -15,10 +15,7 @@
 */
 package com.lunabeat.dooper;
 
-/**
- *
- * @author cory
- */
+
 public class SCPException extends Exception {
 	ClusterInstance _instance;
 
