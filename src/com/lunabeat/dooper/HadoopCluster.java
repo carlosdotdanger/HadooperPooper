@@ -414,8 +414,9 @@ public class HadoopCluster {
 			SCPClient scp = new SCPClient(conn);
 			String[] pathAndFile = splitPathAndFile(dest);
 			String outFileName = pathAndFile[1].length() > 0 ? pathAndFile[1] : splitPathAndFile(src)[1];
-			LOGGER.info("SCP '" + src + "' '" + outFileName + "' '" + pathAndFile[0] + "' " + ClusterConfig.SCP_FILE_MODE);
-			scp.put(src, outFileName, pathAndFile[0], ClusterConfig.SCP_FILE_MODE);
+			String fileMode = _config.get(ClusterConfig.SCP_FILE_MODE_KEY, ClusterConfig.SCP_DEFAULT_FILE_MODE);
+			LOGGER.info("SCP '" + src + "' '" + outFileName + "' '" + pathAndFile[0] + "' " + fileMode);
+			scp.put(src, outFileName, pathAndFile[0], fileMode);
 		} catch (IOException e) {
 			throw new SCPException(e.getMessage(), e.getCause(), host);
 		}

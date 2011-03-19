@@ -32,6 +32,7 @@ import java.util.Properties;
  */
 public class ClusterConfig implements AWSCredentials {
 
+
 	private final Properties _properties = new Properties();
 	private final Properties _requiredFields = new Properties();
 	private final static String REQUIRED_FIELDS = "/com/lunabeat/dooper/RequiredConfigFields.properties";
@@ -70,7 +71,8 @@ public class ClusterConfig implements AWSCredentials {
 		tmpList.add("slaves");
 		return Collections.unmodifiableList(tmpList);
 	}	 
-	public static final String SCP_FILE_MODE = "0644";
+	public static final String SCP_DEFAULT_FILE_MODE = "0755";
+	public static final String SCP_FILE_MODE_KEY = "Scp.Filemode";
 
 	
 	/**
