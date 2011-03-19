@@ -1,0 +1,176 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ACCESS_KEY_KEY	com/lunabeat/dooper/ClusterConfig.java	/^	public static final String ACCESS_KEY_KEY = "AWS.AccessKey";$/;"	f	class:ClusterConfig
+ACCOUNT_ID_KEY	com/lunabeat/dooper/ClusterConfig.java	/^	public static final String ACCOUNT_ID_KEY = "AWS.AccountId";$/;"	f	class:ClusterConfig
+ALL_IPS	com/lunabeat/dooper/HadoopCluster.java	/^	private static final String ALL_IPS = "0.0.0.0\/0";$/;"	f	class:HadoopCluster	file:
+AppCommand	com/lunabeat/pooper/AppDefs.java	/^		public AppCommand(char shortArg, String longArg, CommandType type, String description) {$/;"	m	class:AppDefs.AppCommand
+AppCommand	com/lunabeat/pooper/AppDefs.java	/^	public static final class AppCommand {$/;"	c	class:AppDefs
+AppCommand	com/lunabeat/pooper/commands/AppCommand.java	/^	public AppCommand(ClusterConfig config) {$/;"	m	class:AppCommand
+AppCommand	com/lunabeat/pooper/commands/AppCommand.java	/^public class AppCommand {$/;"	c
+AppDefs	com/lunabeat/pooper/AppDefs.java	/^	private AppDefs() {$/;"	m	class:AppDefs	file:
+AppDefs	com/lunabeat/pooper/AppDefs.java	/^	private AppDefs(AppDefs a) {$/;"	m	class:AppDefs	file:
+AppDefs	com/lunabeat/pooper/AppDefs.java	/^public final class AppDefs {$/;"	c
+ArgumentException	com/lunabeat/pooper/commands/ArgumentException.java	/^	ArgumentException(String problem){$/;"	m	class:ArgumentException
+ArgumentException	com/lunabeat/pooper/commands/ArgumentException.java	/^class ArgumentException extends Exception {$/;"	c
+BLANK	com/lunabeat/dooper/HadoopCluster.java	/^	private static final String BLANK = "";$/;"	f	class:HadoopCluster	file:
+Boolean	com/lunabeat/pooper/AppDefs.java	/^		Boolean,$/;"	e	enum:AppDefs.CommandType	file:
+COMMANDS	com/lunabeat/pooper/AppDefs.java	/^	public static final Map<String, AppCommand> COMMANDS = initCommands();$/;"	f	class:AppDefs
+COMMANDS	com/lunabeat/pooper/commands/AppCommand.java	/^	private static final Map<String, CommandInfo> COMMANDS = initCommands();$/;"	f	class:AppCommand	file:
+ClusterConfig	com/lunabeat/dooper/ClusterConfig.java	/^	public ClusterConfig(InputStream src) throws IOException, ConfigException {$/;"	m	class:ClusterConfig
+ClusterConfig	com/lunabeat/dooper/ClusterConfig.java	/^	public ClusterConfig(String path) throws IOException, ConfigException {$/;"	m	class:ClusterConfig
+ClusterConfig	com/lunabeat/dooper/ClusterConfig.java	/^public class ClusterConfig implements AWSCredentials {$/;"	c
+ClusterInstance	com/lunabeat/dooper/ClusterInstance.java	/^	public ClusterInstance(Instance instance,String reservationId,List<String> securityGroups){$/;"	m	class:ClusterInstance
+ClusterInstance	com/lunabeat/dooper/ClusterInstance.java	/^public class ClusterInstance {$/;"	c
+ClusterList	com/lunabeat/dooper/ClusterList.java	/^	private ClusterList(){};$/;"	m	class:ClusterList	file:
+ClusterList	com/lunabeat/dooper/ClusterList.java	/^	private ClusterList(ClusterList c){};$/;"	m	class:ClusterList	file:
+ClusterList	com/lunabeat/dooper/ClusterList.java	/^public class ClusterList {$/;"	c
+CommandInfo	com/lunabeat/pooper/commands/AppCommand.java	/^		public CommandInfo(int index, String[] requiredArgs, String description) {$/;"	m	class:AppCommand.CommandInfo
+CommandInfo	com/lunabeat/pooper/commands/AppCommand.java	/^	public static class CommandInfo {$/;"	c	class:AppCommand
+CommandType	com/lunabeat/pooper/AppDefs.java	/^	public enum CommandType {$/;"	g	class:AppDefs
+ConfigException	com/lunabeat/dooper/ClusterConfig.java	/^		ConfigException(String message) {$/;"	m	class:ClusterConfig.ConfigException
+ConfigException	com/lunabeat/dooper/ClusterConfig.java	/^	public static class ConfigException extends Exception {$/;"	c	class:ClusterConfig
+DEFAULT_AMI_KEY	com/lunabeat/dooper/ClusterConfig.java	/^	public static final String DEFAULT_AMI_KEY = "AMI.DefaultImage";$/;"	f	class:ClusterConfig
+DEFAULT_CONFIG_PATH	com/lunabeat/pooper/Main.java	/^	private static final String DEFAULT_CONFIG_PATH = "pooper.properties";$/;"	f	class:Main	file:
+EC2_INSTANCE_PREFIX	com/lunabeat/dooper/ClusterConfig.java	/^	public static final String EC2_INSTANCE_PREFIX = "i-";$/;"	f	class:ClusterConfig
+Float	com/lunabeat/pooper/AppDefs.java	/^		Float,$/;"	e	enum:AppDefs.CommandType	file:
+GROUP_NAME_KEY	com/lunabeat/dooper/HadoopCluster.java	/^	public static final String GROUP_NAME_KEY = "group-name";$/;"	f	class:HadoopCluster
+HI_PORT	com/lunabeat/dooper/HadoopCluster.java	/^	private static final Integer HI_PORT = 65535;$/;"	f	class:HadoopCluster	file:
+HadoopCluster	com/lunabeat/dooper/HadoopCluster.java	/^	public HadoopCluster(String groupName, ClusterConfig credentials) {$/;"	m	class:HadoopCluster
+HadoopCluster	com/lunabeat/dooper/HadoopCluster.java	/^public class HadoopCluster {$/;"	c
+ICMP	com/lunabeat/dooper/HadoopCluster.java	/^	private static final String ICMP = "icmp";$/;"	f	class:HadoopCluster	file:
+INSTANCE_GROUP_TYPES	com/lunabeat/dooper/ClusterConfig.java	/^	public static final List<String> INSTANCE_GROUP_TYPES = initInstaceGroupTypes();$/;"	f	class:ClusterConfig
+INSTANCE_TYPES	com/lunabeat/dooper/ClusterConfig.java	/^	public static final List<String> INSTANCE_TYPES = initInstanceTypes();$/;"	f	class:ClusterConfig
+Integer	com/lunabeat/pooper/AppDefs.java	/^		Integer,$/;"	e	enum:AppDefs.CommandType	file:
+KEYPAIR_FILE_KEY	com/lunabeat/dooper/ClusterConfig.java	/^	public static final String KEYPAIR_FILE_KEY = "EC2.KeypairFile";$/;"	f	class:ClusterConfig
+KEYPAIR_NAME_KEY	com/lunabeat/dooper/ClusterConfig.java	/^	public static final String KEYPAIR_NAME_KEY = "EC2.KeypairName";$/;"	f	class:ClusterConfig
+LOG	com/lunabeat/pooper/commands/AppCommand.java	/^	private static final Log LOG = LogFactory.getLog(AppCommand.class.getName());$/;"	f	class:AppCommand	file:
+LOGGER	com/lunabeat/dooper/HadoopCluster.java	/^	private static final Log LOGGER = LogFactory.getLog(HadoopCluster.class.getName());$/;"	f	class:HadoopCluster	file:
+LOW_PORT	com/lunabeat/dooper/HadoopCluster.java	/^	private static final Integer LOW_PORT = 0;$/;"	f	class:HadoopCluster	file:
+MASTER_HOST_KEY	com/lunabeat/dooper/ClusterConfig.java	/^	public static final String MASTER_HOST_KEY = "Master.Host";$/;"	f	class:ClusterConfig
+MASTER_SUFFIX	com/lunabeat/dooper/HadoopCluster.java	/^	public static final String MASTER_SUFFIX = "-master";$/;"	f	class:HadoopCluster
+Main	com/lunabeat/pooper/Main.java	/^public class Main {$/;"	c
+MasterTimeoutException	com/lunabeat/dooper/MasterTimeoutException.java	/^	public MasterTimeoutException(String group,int howMany,String size,String masterId){$/;"	m	class:MasterTimeoutException
+MasterTimeoutException	com/lunabeat/dooper/MasterTimeoutException.java	/^public class MasterTimeoutException extends Exception {$/;"	c
+Multiple	com/lunabeat/pooper/AppDefs.java	/^		Multiple$/;"	e	enum:AppDefs.CommandType	file:
+REQUIRED_FIELDS	com/lunabeat/dooper/ClusterConfig.java	/^	private final static String REQUIRED_FIELDS = "\/com\/lunabeat\/dooper\/RequiredConfigFields.properties";$/;"	f	class:ClusterConfig	file:
+SCPException	com/lunabeat/dooper/SCPException.java	/^	SCPException(String message,ClusterInstance host){$/;"	m	class:SCPException
+SCPException	com/lunabeat/dooper/SCPException.java	/^	SCPException(String message,Throwable cause,ClusterInstance host){$/;"	m	class:SCPException
+SCPException	com/lunabeat/dooper/SCPException.java	/^public class SCPException extends Exception {$/;"	c
+SCP_FILE_MODE	com/lunabeat/dooper/ClusterConfig.java	/^	public static final String SCP_FILE_MODE = "0644";$/;"	f	class:ClusterConfig
+SECRET_KEY_KEY	com/lunabeat/dooper/ClusterConfig.java	/^	public static final String SECRET_KEY_KEY = "AWS.SecretKey";$/;"	f	class:ClusterConfig
+String	com/lunabeat/pooper/AppDefs.java	/^		String,$/;"	e	enum:AppDefs.CommandType	file:
+TCP	com/lunabeat/dooper/HadoopCluster.java	/^	private static final String TCP = "tcp";$/;"	f	class:HadoopCluster	file:
+UDP	com/lunabeat/dooper/HadoopCluster.java	/^	private static final String UDP = "udp";$/;"	f	class:HadoopCluster	file:
+USERNAME_KEY	com/lunabeat/dooper/ClusterConfig.java	/^	public static final String USERNAME_KEY = "EC2.Username";$/;"	f	class:ClusterConfig
+USER_DATA_PATH_KEY	com/lunabeat/dooper/ClusterConfig.java	/^	public static final String USER_DATA_PATH_KEY = "EC2.UserDataFile";$/;"	f	class:ClusterConfig
+WAIT_FOR_MASTER_INTERVAL_SECONDS	com/lunabeat/dooper/HadoopCluster.java	/^	private static final int WAIT_FOR_MASTER_INTERVAL_SECONDS = 30;$/;"	f	class:HadoopCluster	file:
+WAIT_FOR_MASTER_MAX_TIMES	com/lunabeat/dooper/HadoopCluster.java	/^	private static final int WAIT_FOR_MASTER_MAX_TIMES = 5;$/;"	f	class:HadoopCluster	file:
+WEB_PORTS_KEY	com/lunabeat/dooper/ClusterConfig.java	/^	public static final String WEB_PORTS_KEY = "EC2.WebPorts";$/;"	f	class:ClusterConfig
+_config	com/lunabeat/dooper/HadoopCluster.java	/^	private ClusterConfig _config = null;$/;"	f	class:HadoopCluster	file:
+_config	com/lunabeat/pooper/commands/AppCommand.java	/^	private ClusterConfig _config;$/;"	f	class:AppCommand	file:
+_description	com/lunabeat/pooper/AppDefs.java	/^		private String _description;$/;"	f	class:AppDefs.AppCommand	file:
+_description	com/lunabeat/pooper/commands/AppCommand.java	/^		private String _description;$/;"	f	class:AppCommand.CommandInfo	file:
+_ec2	com/lunabeat/dooper/HadoopCluster.java	/^	private AmazonEC2 _ec2 = null;$/;"	f	class:HadoopCluster	file:
+_group	com/lunabeat/dooper/MasterTimeoutException.java	/^	private String _group;$/;"	f	class:MasterTimeoutException	file:
+_groupName	com/lunabeat/dooper/HadoopCluster.java	/^	private String _groupName = null;$/;"	f	class:HadoopCluster	file:
+_howMany	com/lunabeat/dooper/MasterTimeoutException.java	/^	private int _howMany;$/;"	f	class:MasterTimeoutException	file:
+_index	com/lunabeat/pooper/commands/AppCommand.java	/^		private int _index = -1;$/;"	f	class:AppCommand.CommandInfo	file:
+_instance	com/lunabeat/dooper/ClusterInstance.java	/^	private Instance _instance;$/;"	f	class:ClusterInstance	file:
+_instance	com/lunabeat/dooper/SCPException.java	/^	ClusterInstance _instance;$/;"	f	class:SCPException
+_longArg	com/lunabeat/pooper/AppDefs.java	/^		private String _longArg;$/;"	f	class:AppDefs.AppCommand	file:
+_master	com/lunabeat/dooper/HadoopCluster.java	/^	private ClusterInstance _master = null;$/;"	f	class:HadoopCluster	file:
+_masterGroupName	com/lunabeat/dooper/HadoopCluster.java	/^	private String _masterGroupName = null;$/;"	f	class:HadoopCluster	file:
+_masterId	com/lunabeat/dooper/MasterTimeoutException.java	/^	private String _masterId;$/;"	f	class:MasterTimeoutException	file:
+_problem	com/lunabeat/pooper/commands/ArgumentException.java	/^	private String _problem;$/;"	f	class:ArgumentException	file:
+_properties	com/lunabeat/dooper/ClusterConfig.java	/^	private final Properties _properties = new Properties();$/;"	f	class:ClusterConfig	file:
+_requiredArgNames	com/lunabeat/pooper/commands/AppCommand.java	/^		private String[] _requiredArgNames;$/;"	f	class:AppCommand.CommandInfo	file:
+_requiredArgTypes	com/lunabeat/pooper/commands/AppCommand.java	/^		private String[] _requiredArgTypes;$/;"	f	class:AppCommand.CommandInfo	file:
+_requiredFields	com/lunabeat/dooper/ClusterConfig.java	/^	private final Properties _requiredFields = new Properties();$/;"	f	class:ClusterConfig	file:
+_reservationId	com/lunabeat/dooper/ClusterInstance.java	/^	private String _reservationId;$/;"	f	class:ClusterInstance	file:
+_secGroups	com/lunabeat/dooper/ClusterInstance.java	/^	private List<String> _secGroups;$/;"	f	class:ClusterInstance	file:
+_shortArg	com/lunabeat/pooper/AppDefs.java	/^		private char _shortArg;$/;"	f	class:AppDefs.AppCommand	file:
+_size	com/lunabeat/dooper/MasterTimeoutException.java	/^	private String _size;$/;"	f	class:MasterTimeoutException	file:
+_slaves	com/lunabeat/dooper/HadoopCluster.java	/^	private ArrayList<ClusterInstance> _slaves = new ArrayList<ClusterInstance>();$/;"	f	class:HadoopCluster	file:
+_type	com/lunabeat/pooper/AppDefs.java	/^		private CommandType _type;$/;"	f	class:AppDefs.AppCommand	file:
+checkCommandArgs	com/lunabeat/pooper/commands/AppCommand.java	/^	private void checkCommandArgs(String commandName, CommandInfo cInfo, String[] args) throws ArgumentException {$/;"	m	class:AppCommand	file:
+com.lunabeat.dooper	com/lunabeat/dooper/ClusterConfig.java	/^package com.lunabeat.dooper;$/;"	p
+com.lunabeat.dooper	com/lunabeat/dooper/ClusterInstance.java	/^package com.lunabeat.dooper;$/;"	p
+com.lunabeat.dooper	com/lunabeat/dooper/ClusterList.java	/^package com.lunabeat.dooper;$/;"	p
+com.lunabeat.dooper	com/lunabeat/dooper/HadoopCluster.java	/^package com.lunabeat.dooper;$/;"	p
+com.lunabeat.dooper	com/lunabeat/dooper/MasterTimeoutException.java	/^package com.lunabeat.dooper;$/;"	p
+com.lunabeat.dooper	com/lunabeat/dooper/SCPException.java	/^package com.lunabeat.dooper;$/;"	p
+com.lunabeat.pooper	com/lunabeat/pooper/AppDefs.java	/^package com.lunabeat.pooper;$/;"	p
+com.lunabeat.pooper	com/lunabeat/pooper/Main.java	/^package com.lunabeat.pooper;$/;"	p
+com.lunabeat.pooper.commands	com/lunabeat/pooper/commands/AppCommand.java	/^package com.lunabeat.pooper.commands;$/;"	p
+com.lunabeat.pooper.commands	com/lunabeat/pooper/commands/ArgumentException.java	/^package com.lunabeat.pooper.commands;$/;"	p
+commandInfo	com/lunabeat/pooper/commands/AppCommand.java	/^	public static CommandInfo commandInfo(String name) {$/;"	m	class:AppCommand
+commandNames	com/lunabeat/pooper/commands/AppCommand.java	/^	public static Set<String> commandNames() {$/;"	m	class:AppCommand
+createGroups	com/lunabeat/pooper/commands/AppCommand.java	/^	private void createGroups(String clusterName) {$/;"	m	class:AppCommand	file:
+createSecurityGroups	com/lunabeat/dooper/HadoopCluster.java	/^	public void createSecurityGroups() {$/;"	m	class:HadoopCluster
+deleteCluster	com/lunabeat/pooper/commands/AppCommand.java	/^	private void deleteCluster(String clusterName) {$/;"	m	class:AppCommand	file:
+describeCluster	com/lunabeat/pooper/commands/AppCommand.java	/^	private void describeCluster(String name) {$/;"	m	class:AppCommand	file:
+description	com/lunabeat/pooper/AppDefs.java	/^		public String description() {$/;"	m	class:AppDefs.AppCommand
+get	com/lunabeat/dooper/ClusterConfig.java	/^	public String get(String name) {$/;"	m	class:ClusterConfig
+get	com/lunabeat/dooper/ClusterConfig.java	/^	public String get(String name, String defaultVal) {$/;"	m	class:ClusterConfig
+getAWSAccessKeyId	com/lunabeat/dooper/ClusterConfig.java	/^	public String getAWSAccessKeyId() {$/;"	m	class:ClusterConfig
+getAWSSecretKey	com/lunabeat/dooper/ClusterConfig.java	/^	public String getAWSSecretKey() {$/;"	m	class:ClusterConfig
+getClusterMap	com/lunabeat/dooper/ClusterList.java	/^	public static Map<String,Map<String,List<Instance>>> getClusterMap(ClusterConfig config){$/;"	m	class:ClusterList
+getDescription	com/lunabeat/pooper/commands/AppCommand.java	/^		public String getDescription() {$/;"	m	class:AppCommand.CommandInfo
+getGroupName	com/lunabeat/dooper/HadoopCluster.java	/^	public String getGroupName() {$/;"	m	class:HadoopCluster
+getIndex	com/lunabeat/pooper/commands/AppCommand.java	/^		public int getIndex() {$/;"	m	class:AppCommand.CommandInfo
+getInstance	com/lunabeat/dooper/ClusterInstance.java	/^	 *\/ public Instance getInstance() {$/;"	m	class:ClusterInstance
+getInstance	com/lunabeat/dooper/SCPException.java	/^	public ClusterInstance getInstance(){$/;"	m	class:SCPException
+getInstanceForId	com/lunabeat/dooper/HadoopCluster.java	/^	public DescribeInstancesResult getInstanceForId(String instanceId) {$/;"	m	class:HadoopCluster
+getInt	com/lunabeat/dooper/ClusterConfig.java	/^	public Integer getInt(String name) {$/;"	m	class:ClusterConfig
+getLoginCommand	com/lunabeat/pooper/commands/AppCommand.java	/^	private void getLoginCommand(String target) {$/;"	m	class:AppCommand	file:
+getMaster	com/lunabeat/dooper/HadoopCluster.java	/^	public ClusterInstance getMaster() {$/;"	m	class:HadoopCluster
+getMasterGroupName	com/lunabeat/dooper/HadoopCluster.java	/^	public String getMasterGroupName() {$/;"	m	class:HadoopCluster
+getProblem	com/lunabeat/pooper/commands/ArgumentException.java	/^	public String getProblem(){$/;"	m	class:ArgumentException
+getRequiredArgNames	com/lunabeat/pooper/commands/AppCommand.java	/^		private String[] getRequiredArgNames() {$/;"	m	class:AppCommand.CommandInfo	file:
+getRequiredArgTypes	com/lunabeat/pooper/commands/AppCommand.java	/^		private String[] getRequiredArgTypes() {$/;"	m	class:AppCommand.CommandInfo	file:
+getRequiredFields	com/lunabeat/dooper/ClusterConfig.java	/^	public Map<String, String> getRequiredFields() {$/;"	m	class:ClusterConfig
+getReservationId	com/lunabeat/dooper/ClusterInstance.java	/^	 *\/ public String getReservationId() {$/;"	m	class:ClusterInstance
+getSecurityGroups	com/lunabeat/dooper/ClusterInstance.java	/^	 *\/ public List<String> getSecurityGroups() {$/;"	m	class:ClusterInstance
+getSlaves	com/lunabeat/dooper/HadoopCluster.java	/^	public List<ClusterInstance> getSlaves() {$/;"	m	class:HadoopCluster
+getUserData	com/lunabeat/dooper/HadoopCluster.java	/^	public String getUserData() throws IOException {$/;"	m	class:HadoopCluster
+group	com/lunabeat/dooper/MasterTimeoutException.java	/^	 *\/ public String group() {$/;"	m	class:MasterTimeoutException
+groupsExist	com/lunabeat/dooper/HadoopCluster.java	/^	public boolean groupsExist() {$/;"	m	class:HadoopCluster
+howMany	com/lunabeat/dooper/MasterTimeoutException.java	/^	 *\/ public int howMany() {$/;"	m	class:MasterTimeoutException
+init	com/lunabeat/dooper/ClusterConfig.java	/^	private void init() throws IOException, ConfigException {$/;"	m	class:ClusterConfig	file:
+init	com/lunabeat/dooper/HadoopCluster.java	/^	private void init() {$/;"	m	class:HadoopCluster	file:
+initCommands	com/lunabeat/pooper/AppDefs.java	/^	private static Map<String, AppCommand> initCommands() {$/;"	m	class:AppDefs	file:
+initCommands	com/lunabeat/pooper/commands/AppCommand.java	/^	private static Map<String, CommandInfo> initCommands() {$/;"	m	class:AppCommand	file:
+initInstaceGroupTypes	com/lunabeat/dooper/ClusterConfig.java	/^	static private List<String> initInstaceGroupTypes(){$/;"	m	class:ClusterConfig	file:
+initInstanceTypes	com/lunabeat/dooper/ClusterConfig.java	/^	private static List<String> initInstanceTypes(){$/;"	m	class:ClusterConfig	file:
+launchCluster	com/lunabeat/pooper/commands/AppCommand.java	/^	private void launchCluster(String[] args) {$/;"	m	class:AppCommand	file:
+launchMaster	com/lunabeat/dooper/HadoopCluster.java	/^	public RunInstancesResult launchMaster(String size) throws IOException {$/;"	m	class:HadoopCluster
+launchMaster	com/lunabeat/pooper/commands/AppCommand.java	/^	private void launchMaster(String[] args) {$/;"	m	class:AppCommand	file:
+launchSlaves	com/lunabeat/dooper/HadoopCluster.java	/^	public RunInstancesResult launchSlaves(int howMany, String size) throws IOException, MasterTimeoutException {$/;"	m	class:HadoopCluster
+launchSlaves	com/lunabeat/pooper/commands/AppCommand.java	/^	private void launchSlaves(String[] args) {$/;"	m	class:AppCommand	file:
+listClusterGroups	com/lunabeat/dooper/ClusterList.java	/^	public static Map<String, Map<String, Integer>> listClusterGroups(ClusterConfig config) {$/;"	m	class:ClusterList
+listClusters	com/lunabeat/pooper/commands/AppCommand.java	/^	private void listClusters() {$/;"	m	class:AppCommand	file:
+longArg	com/lunabeat/pooper/AppDefs.java	/^		public String longArg() {$/;"	m	class:AppDefs.AppCommand
+main	com/lunabeat/pooper/Main.java	/^	public static void main(String[] args) {$/;"	m	class:Main
+masterId	com/lunabeat/dooper/MasterTimeoutException.java	/^	 *\/ public String masterId() {$/;"	m	class:MasterTimeoutException
+pushFile	com/lunabeat/pooper/commands/AppCommand.java	/^	private void pushFile(String[] args) {$/;"	m	class:AppCommand	file:
+putFile	com/lunabeat/dooper/HadoopCluster.java	/^	public void putFile(ClusterInstance host, String src, String dest) throws SCPException {$/;"	m	class:HadoopCluster
+putFile	com/lunabeat/dooper/HadoopCluster.java	/^	public void putFile(List<ClusterInstance> hosts, String src, String dest) throws SCPException {$/;"	m	class:HadoopCluster
+removeSecurityGroups	com/lunabeat/dooper/HadoopCluster.java	/^	public boolean removeSecurityGroups() {$/;"	m	class:HadoopCluster
+runCommand	com/lunabeat/pooper/commands/AppCommand.java	/^	public void runCommand(String commandName, String[] args) {$/;"	m	class:AppCommand
+shortArg	com/lunabeat/pooper/AppDefs.java	/^		public char shortArg() {$/;"	m	class:AppDefs.AppCommand
+size	com/lunabeat/dooper/MasterTimeoutException.java	/^	 *\/ public String size() {$/;"	m	class:MasterTimeoutException
+splitPathAndFile	com/lunabeat/dooper/HadoopCluster.java	/^	private String[] splitPathAndFile(String path) {$/;"	m	class:HadoopCluster	file:
+terminateAllSlaves	com/lunabeat/dooper/HadoopCluster.java	/^	public TerminateInstancesResult terminateAllSlaves() {$/;"	m	class:HadoopCluster
+terminateCluster	com/lunabeat/dooper/HadoopCluster.java	/^	public TerminateInstancesResult terminateCluster() {$/;"	m	class:HadoopCluster
+terminateCluster	com/lunabeat/pooper/commands/AppCommand.java	/^	private void terminateCluster(String clusterName) {$/;"	m	class:AppCommand	file:
+terminateMaster	com/lunabeat/dooper/HadoopCluster.java	/^	public TerminateInstancesResult terminateMaster() {$/;"	m	class:HadoopCluster
+terminateSlaves	com/lunabeat/dooper/HadoopCluster.java	/^	public TerminateInstancesResult terminateSlaves(int howMany) {$/;"	m	class:HadoopCluster
+terminateSlaves	com/lunabeat/pooper/commands/AppCommand.java	/^	private void terminateSlaves(String[] args) {$/;"	m	class:AppCommand	file:
+testConfig	com/lunabeat/dooper/ClusterConfig.java	/^	private void testConfig() throws ConfigException {$/;"	m	class:ClusterConfig	file:
+type	com/lunabeat/pooper/AppDefs.java	/^		public CommandType type() {$/;"	m	class:AppDefs.AppCommand
+update	com/lunabeat/dooper/HadoopCluster.java	/^	private void update() {$/;"	m	class:HadoopCluster	file:
+userDataValue	com/lunabeat/dooper/HadoopCluster.java	/^	private static final Pattern userDataValue = Pattern.compile("%([a-zA-Z0-9\\\\._-]+)%");$/;"	f	class:HadoopCluster	file:
