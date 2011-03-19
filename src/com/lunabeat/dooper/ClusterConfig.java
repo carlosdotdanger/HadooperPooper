@@ -71,8 +71,8 @@ public class ClusterConfig implements AWSCredentials {
 		tmpList.add("slaves");
 		return Collections.unmodifiableList(tmpList);
 	}	 
-	public static final String SCP_DEFAULT_FILE_MODE = "0755";
-	public static final String SCP_FILE_MODE_KEY = "Scp.Filemode";
+	public static final String SCP_DEFAULT_FILE_MODE = "0744";
+	public static final String SCP_FILE_MODE_KEY = "SCP.Filemode";
 
 	
 	/**
