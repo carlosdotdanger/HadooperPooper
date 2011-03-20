@@ -26,7 +26,28 @@ Running --
 
 run pooper.sh in dist/bin after building.
 
-As of this writing, HaddooperPooper can launch,terminate,list,scp single files and describe clusters like the hadoop-ec2 tools, will be adding multi-file (wildcard) and directory scp copies, logins and port forwarding.
+As of this writing, HaddooperPooper 's command-list:
+	command
+	create-groups
+	delete-cluster
+	describe-cluster
+	get-login-command
+	launch-cluster
+	launch-master
+	launch-slaves
+	list-clusters
+	login
+	push-file
+	terminate-cluster
+	terminate-slaves
+
+Still to come:
+port forwarding, 
+automated job submission/termination, 
+support for a map-reduce only (non-dfs) slave group that can be scaled separately,
+GUI.
+
+
 
 
 
