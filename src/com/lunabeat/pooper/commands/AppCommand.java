@@ -517,7 +517,7 @@ public class AppCommand {
 			}
 		}
 		if(host == null){
-			out.println("'" + target + "' is not a valid cluster name or instance id.\nexiting.");
+			out.println("echo  error: '" + target + "' is not a valid cluster name or instance id.");
 			System.exit(0);
 		}
 		StringBuilder sb = new StringBuilder("ssh -i")

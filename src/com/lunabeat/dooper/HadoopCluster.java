@@ -1,18 +1,18 @@
 /***********************************************
-*    Copyright [2011] [carlosdotdanger]
-*
-*  Licensed under the Apache License, Version 2.0 (the "License");
-*  you may not use this file except in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-*  Unless required by applicable law or agreed to in writing, software
-*  distributed under the License is distributed on an "AS IS" BASIS,
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*  See the License for the specific language governing permissions and
-*  limitations under the License.
-*/
+ *    Copyright [2011] [carlosdotdanger]
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.lunabeat.dooper;
 
 import ch.ethz.ssh2.Connection;
@@ -54,10 +54,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-/**
- *
- * @author cory
- */
 public class HadoopCluster {
 
 	private static final Log LOGGER = LogFactory.getLog(HadoopCluster.class.getName());
@@ -81,7 +77,7 @@ public class HadoopCluster {
 	private static final String BLANK = "";
 
 	/**
-	 * 
+	 *
 	 * @param groupName
 	 * @param credentials
 	 */
@@ -126,6 +122,9 @@ public class HadoopCluster {
 		return _slaves;
 	}
 
+	/**
+	 * @returns clusterinfo for master instance
+	 **/
 	public ClusterInstance getMaster() {
 		update();
 		return _master;
@@ -143,7 +142,7 @@ public class HadoopCluster {
 		}
 		//make the groups
 		createSecurityGroups();
-		String AMIImage = _config.get( "AMI." + size + ".Image", _config.get(ClusterConfig.DEFAULT_AMI_KEY) );
+		String AMIImage = _config.get("AMI." + size + ".Image", _config.get(ClusterConfig.DEFAULT_AMI_KEY));
 		LOGGER.info("AMIImage = [" + AMIImage + "]");
 		RunInstancesRequest rir = new RunInstancesRequest().withImageId(AMIImage).
 				withMinCount(1).
@@ -194,7 +193,7 @@ public class HadoopCluster {
 		}
 
 
-		String AMIImage = _config.get( "AMI." + size + ".Image", _config.get(ClusterConfig.DEFAULT_AMI_KEY) );
+		String AMIImage = _config.get("AMI." + size + ".Image", _config.get(ClusterConfig.DEFAULT_AMI_KEY));
 		RunInstancesRequest rir = new RunInstancesRequest().withImageId(AMIImage).
 				withMinCount(howMany).
 				withMaxCount(howMany).
@@ -235,7 +234,7 @@ public class HadoopCluster {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public TerminateInstancesResult terminateAllSlaves() {
@@ -244,7 +243,7 @@ public class HadoopCluster {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param howMany
 	 * @return result of aws call to terminate
 	 */
@@ -299,7 +298,7 @@ public class HadoopCluster {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void createSecurityGroups() {
 		if (groupsExist()) {
@@ -382,7 +381,7 @@ public class HadoopCluster {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param hosts
 	 * @param src
 	 * @param dest
@@ -423,29 +422,30 @@ public class HadoopCluster {
 		}
 	}
 
-/**
- * 
- * @param hosts
- * @param command
- * @return
- * @throws CmdException
- */
-	public List<CmdSessionResult> remoteCommand(List<ClusterInstance> hosts, String command) throws CmdException{
+	/**
+	 *
+	 * @param hosts
+	 * @param command
+	 * @return
+	 * @throws CmdException
+	 */
+	public List<CmdSessionResult> remoteCommand(List<ClusterInstance> hosts, String command) throws CmdException {
 		ArrayList<CmdSessionResult> results = new ArrayList<CmdSessionResult>();
-		for(ClusterInstance host:hosts)
-			results.add(remoteCommand(host,command));
+		for (ClusterInstance host : hosts) {
+			results.add(remoteCommand(host, command));
+		}
 		return results;
 	}
 
-/**
- * 
- * @param host
- * @param command
- * @return
- * @throws CmdException
- */
-	public CmdSessionResult remoteCommand(ClusterInstance host, String command) throws CmdException{
-		try{
+	/**
+	 *
+	 * @param host
+	 * @param command
+	 * @return
+	 * @throws CmdException
+	 */
+	public CmdSessionResult remoteCommand(ClusterInstance host, String command) throws CmdException {
+		try {
 			Connection conn = new Connection(host.getInstance().getPublicDnsName());
 			conn.connect();
 			File keyfile = new File(_config.get(ClusterConfig.KEYPAIR_FILE_KEY));
@@ -453,10 +453,11 @@ public class HadoopCluster {
 					conn.authenticateWithPublicKey(
 					_config.get(ClusterConfig.USERNAME_KEY),
 					keyfile, BLANK);
-			if(!isAuthenticated)
-				throw new CmdException("Could not authenticate.",host);
+			if (!isAuthenticated) {
+				throw new CmdException("Could not authenticate.", host);
+			}
 			Session session = conn.openSession();
-			LOGGER.info("EXEC '"+command + "' on instance: " + host.getInstance().getInstanceId());
+			LOGGER.info("EXEC '" + command + "' on instance: " + host.getInstance().getInstanceId());
 			session.execCommand(command);
 			InputStream outStrm = new StreamGobbler(session.getStdout());
 			InputStream errStrm = new StreamGobbler(session.getStderr());
@@ -464,19 +465,19 @@ public class HadoopCluster {
 			BufferedReader stderrRdr = new BufferedReader(new InputStreamReader(errStrm));
 			StringBuilder sb = new StringBuilder();
 			String stdout;
-			while((stdout = stdoutRdr.readLine()) != null){
+			while ((stdout = stdoutRdr.readLine()) != null) {
 				sb.append(stdout).append("\n");
 			}
 			stdout = sb.toString();
 			sb = new StringBuilder();
 			String stderr;
-			while((stderr = stderrRdr.readLine()) != null){
+			while ((stderr = stderrRdr.readLine()) != null) {
 				sb.append(stderr).append("\n");
 			}
 			stderr = sb.toString();
 			conn.close();
 			conn = null;
-			return new CmdSessionResult(host,session.getExitStatus(),stdout,stderr);
+			return new CmdSessionResult(host, session.getExitStatus(), stdout, stderr);
 		} catch (IOException e) {
 			throw new CmdException(e.getMessage(), e.getCause(), host);
 		}
@@ -509,7 +510,7 @@ public class HadoopCluster {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return userdata file contents after placeholder substitution placeholder
 	 * @throws IOException
 	 */
